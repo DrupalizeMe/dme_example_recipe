@@ -1,0 +1,126 @@
+name: 'Drupalize.Me Blog content type'
+description: 'Provides a Blog content type with Title, Body, and Tags; grants content editors permissions to create/edit blog posts.'
+type: 'Content type'
+
+install:
+  - node
+  - text
+  - taxonomy
+
+config:
+  strict:
+    # Treat field storages strictly, since they influence database layout.
+    - field.storage.node.field_dme_blog_tags
+
+  actions:
+    # Ensure the role exists, then grant the needed permissions.
+    # (grantPermission(s) is the supported config action for user.role.*)  [oai_citation:2‡Drupal Project](https://project.pages.drupalcode.org/distributions_recipes/config_actions.html)
+    user.role.content_editor:
+      createIfNotExists:
+        label: 'Content editor'
+      grantPermissions:
+        - 'create blog content'
+        - 'edit any blog content'
+        # Optional-but-practical if you keep auto_create: true on the Tags field.
+        - 'create terms in tags'
+
+    # Form display (widgets)
+    core.entity_form_display.node.blog.default:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: blog
+        mode: default
+        status: true
+      setComponents:
+        - name: title
+          options:
+            type: string_textfield
+            weight: 0
+            region: content
+        - name: body
+          options:
+            type: text_textarea_with_summary
+            weight: 1
+            region: content
+        - name: field_dme_blog_tags
+          options:
+            type: entity_reference_autocomplete_tags
+            weight: 2
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: { }
+        - name: uid
+          options:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+        - name: created
+          options:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+        - name: status
+          options:
+            type: boolean_checkbox
+            weight: 120
+            region: content
+
+    # View display: Full
+    core.entity_view_display.node.blog.default:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: blog
+        mode: default
+        status: true
+      setComponents:
+        - name: body
+          options:
+            type: text_default
+            label: hidden
+            weight: 0
+            region: content
+        - name: field_dme_blog_tags
+          options:
+            type: entity_reference_label
+            label: above
+            settings:
+              link: true
+            third_party_settings: { }
+            weight: 10
+            region: content
+        - name: links
+          options:
+            weight: 100
+            region: content
+
+    # View display: Teaser
+    core.entity_view_display.node.blog.teaser:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: blog
+        mode: teaser
+        status: true
+        content:
+          links:
+            weight: 100
+            region: content
+      setComponents:
+        - name: body
+          options:
+            type: text_summary_or_trimmed
+            label: hidden
+            weight: 0
+            region: content
+        - name: field_dme_blog_tags
+          options:
+            type: entity_reference_label
+            label: above
+            settings:
+              link: true
+            third_party_settings: { }
+            weight: 10
+            region: content

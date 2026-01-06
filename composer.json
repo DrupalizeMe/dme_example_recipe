@@ -1,0 +1,9 @@
+{
+    "name": "drupalizeme/dme_example_recipe",
+    "description": "Example Drupal recipe that adds a Blog content type with Tags and content editor permissions.",
+    "type": "drupal-recipe",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^10.3 || ^11"
+    }
+}
