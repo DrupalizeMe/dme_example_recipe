@@ -1,8 +1,9 @@
 name: 'Drupalize.Me Blog content type'
-description: 'Provides a Blog content type with Title, Body, and Tags; grants content editors permissions to create/edit blog posts.'
+description: 'Provides a Blog content type with Title, Body, Image, and Tags; grants content editors permissions to create/edit blog posts.'
 type: 'Content type'
 
 install:
+  - image
   - node
   - text
   - taxonomy
@@ -11,6 +12,8 @@ config:
   strict:
     # Treat field storages strictly, since they influence database layout.
     - field.storage.node.field_dme_blog_tags
+    - field.storage.node.field_dme_blog_image
+    - field.storage.node.body
 
   actions:
     # Ensure the role exists, then grant the needed permissions.
@@ -42,6 +45,15 @@ config:
             type: text_textarea_with_summary
             weight: 1
             region: content
+        - name: field_dme_blog_image
+          options:
+            type: image_image
+            weight: 1
+            region: content
+            settings:
+              progress_indicator: throbber
+              preview_image_style: thumbnail
+            third_party_settings: {  }
         - name: field_dme_blog_tags
           options:
             type: entity_reference_autocomplete_tags
@@ -83,6 +95,18 @@ config:
             label: hidden
             weight: 0
             region: content
+        - name: field_dme_blog_image
+          options:
+            type: image
+            label: hidden
+            settings:
+              image_link: ''
+              image_style: wide
+              image_loading:
+                attribute: eager
+            third_party_settings: {  }
+            weight: -1
+            region: content
         - name: field_dme_blog_tags
           options:
             type: entity_reference_label
@@ -114,6 +138,18 @@ config:
             type: text_summary_or_trimmed
             label: hidden
             weight: 0
+            region: content
+        - name: field_dme_blog_image
+          options:
+            type: image
+            label: hidden
+            settings:
+              image_link: ''
+              image_style: wide
+              image_loading:
+                attribute: eager
+            third_party_settings: {  }
+            weight: -1
             region: content
         - name: field_dme_blog_tags
           options:
